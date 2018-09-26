@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
+    
+    <title>VUE JS</title>
+</head>
+<body>
+    
+
+    <div id="hola">
+        <h1>{{ mensaje }}</h1>
+        
+        <input type="text" v-model="texto">
+        <h2 v-on:click="ejecutar">{{texto}}</h2>
+        <hr>
+        <h3>Suma de dos numeros</h3>
+        Numero 1:  <input type="number" v-model="n1"> <br><br>
+        Numero 2:  <input type="number" v-model="n2"><br><br>
+        <select v-model="opc">
+            <option value="suma">Suma</option>
+            <option value="resta">Resta</option>
+            <option value="mult">Multiplicacion</option>
+            <option value="div">Division</option>
+        </select>
+        <h3 v-if="opc=='suma'">El resultado es {{parseInt(n1) + parseInt(n2)}}</h3>
+        <h3 v-if="opc=='resta'">El resultado es {{parseInt(n1) - parseInt(n2)}}</h3>
+        <h3 v-if="opc=='mult'">El resultado es {{parseInt(n1) * parseInt(n2)}}</h3>
+        <h3 v-if="opc=='div'">El resultado es {{parseInt(n1) / parseInt(n2)}}</h3>
+
+
+        <hr>
+        <h2>Listado</h2>
+
+        <ul v-for="item in datos">
+            <li>{{item}}</li>
+
+        </ul>
+
+        <hr>
+        <titulo></titulo>
+        <tabla style="border:1px solid black"></tabla>
+        <hr>
+        <listado v-bind:arreglo="registros"></listado>
+        
+    </div>
+    
+
+    <script src="vuejs.js"></script>
+</body>
+</html>

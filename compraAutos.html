@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ejemplo Vue Js</title>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="app">
+
+                    <div class="input-group jumbotron">
+                        <h3 class="text-center">Agregar autos nuevos</h3>
+                        <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" v-model="newEntry.name" placeholder="Tipo de Auto">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" v-model="newEntry.amount" placeholder="$...........">
+                        </div>
+                        
+                        <br> <br>
+                        <button @click="add()" type="button" class="btn btn-success btn-block col-md-2" >Agregar Auto</button>
+                        </div>
+                    </div>
+
+                    
+
+
+                    <table class="table table-stripped">
+                        <thead>
+                            <tr>
+                                    <td colspan="4" class="text-center"><h1>Seleccionar autos en inventario</h1></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <select v-model="newEntry.name" class="form-control">
+                                        <option selected disabled value="0">Seleccionar Auto...</option>
+                                        <option v-for="item, index in items">{{item.name}}</option>
+                                    </select>
+
+
+                                    
+                                </td>
+                                <td>
+                                    
+                                        <select v-model="newEntry.amount" class="form-control">
+                                                <option selected disabled value="0">Seleccionar Monto...</option>
+                                                <option v-for="item, index in items">{{item.amount}}</option>
+                                        </select>
+
+
+                                    
+                                </td>
+                                <td>
+                                    <button @click="add()" type="button" class="btn btn-success btn-block" >Agregar</button>
+                                        
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th>Descripción</th>
+                                <th style="width: 200px;">Monto</th>
+                                <th style="width: 100px;">¿Cancelado?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            
+                            <tr v-if="items.length === 0">
+                                    <td colspan="4" class="text-center">
+                                        No hay autos para mostrar
+                                    </td>
+                            </tr>
+                            
+                            <tr v-for="item, index in items">
+                                    <td>
+                                        <button
+                                        @click="remove(index)"
+                                        type="button" class="btn btn-danger btn-xs"
+                                        >
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ item.name }}</td>
+                                        <td>$ {{ item.amount.toFixed(2)}}</td>
+                                        <td class="text-center" :title="item.paid ? 'Si': 'No'">
+                                            <button
+                                            @click="changeToPaid(item)"
+                                            class="btn btn-default btn-sm"
+                                            :class="{'btn-success': item.paid}">
+                                                <i v-if="item.paid" class="glyphicon glyphicon-ok"></i>
+                                                <i v-if="!item.paid" class="glyphicon glyphicon-remove"></i>
+
+                                            </button>
+                                        </td>
+    
+                                </tr>
+
+                            
+                        </tbody>
+                        <tfoot>
+                            <tr class="text-danger">
+                                <td></td>
+                                <td class="text-right"> Por Pagar</td>
+                                <td>{{ totalAmount(0) }}</td>
+                                <td></td>
+                            </tr>
+                            <tr class="text-success">
+                                    <td></td>
+                                    <td class="text-right"> Pagado</td>
+                                    <td>{{ totalAmount(1) }}</td>
+                                    <td></td>
+                            </tr>
+                            <tr class="text-success">
+                                    <td></td>
+                                    <td class="text-right"> Total</td>
+                                    <td>{{ totalAmount(2) }}</td>
+                                    <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+var app = new Vue({
+    el: '#app',
+    data: {
+        newEntry: {
+            name: '',
+            amount: null
+        },
+        
+        items: [
+            {
+            name: 'Ferrari',
+            amount: 200000,
+            paid: false
+        },
+        {
+            name: 'Audi',
+            amount: 75000,
+            paid: false
+        },
+    ]
+    },
+    methods: {
+        remove: function(index) {
+            this.items.splice(index, 1);
+        },
+        add() {
+            this.items.push({
+            name: this.newEntry.name,
+            amount: parseFloat(this.newEntry.amount),
+            paid: false
+            });
+            this.newEntry.name='';
+            this.newEntry.amount = 0;
+        },
+        changeToPaid(item) {
+            item.paid = !item.paid;
+        },
+        totalAmount(t) {
+            var total = this.items.reduce(function (a,b){
+                switch(t){
+                    case 0: return a + (!b.paid ? b.amount : 0);
+                    case 1: return a + (b.paid ? b.amount : 0);
+                    case 2: return a + b.amount;
+                }
+            }, 0);
+            return total.toFixed(2);
+        }
+        
+    },
+})
+</script>
+</html>
